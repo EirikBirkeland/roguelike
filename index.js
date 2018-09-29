@@ -44,38 +44,16 @@ class Enemy extends Creature {
         const numPossibleDirections = 9;
         const rndNum = Math.floor(Math.random(9) * 10) + 1;
 
-        switch (rndNum) {
-            case 1:
-                this.x -= 1;
-                this.y -= 1;
-                break;
-            case 2:
-                this.y -= 1;
-                break;
-            case 3:
-                this.x += 1;
-                this.y += 1
-                break;
-            case 4:
-                this.x -= 1;
-                break;
-            case 5:
-                break
-            case 6:
-                this.x += 1;
-                break;
-            case 7:
-                this.x -= 1;
-                this.y += 1;
-                break;
-            case 8:
-                this.y += 1;
-                break;
-            case 9:
-                this.x += 1;
-                this.y += 1;
-                break;
-            default:
+        if ([1, 4, 7].includes(rndNum)) {
+            this.x -= 1;
+        } else if ([3, 6, 9].includes(rndNum)) {
+            this.x += 1;
+        }
+
+        if ([1, 2, 3].includes(rndNum)) {
+            this.y -= 1;
+        } else if ([7, 8, 9].includes(rndNum)) {
+            this.y += 1;
         }
     }
 }
