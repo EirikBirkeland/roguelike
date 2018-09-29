@@ -2,6 +2,14 @@
 // 2. Add some walls
 // 3. Support DOM and terminal
 
+const GFX = {
+    VOID: '`',
+    FLOOR: '.',
+    WALL: '■',
+    PLAYER: '@',
+    ENEMY: 'g',
+}
+
 class Entity {
     constructor(x, y, graphic) {
         this.x = x;
@@ -65,17 +73,19 @@ class Room {
     constructor(xSize, ySize) {
         this.xSize = xSize;
         this.ySize = ySize;
-        this.grid = Array(this.ySize).fill('_').map(_ => Array(this.xSize).fill('.'));
+        this.grid = Array(this.ySize).fill('_').map(_ => Array(this.xSize).fill(GFX.FLOOR));
         this.registeredObjects = [];
     }
 
+    // TODO: Move to LevelArea?
     registerObject(obj) {
         this.registeredObjects.push(obj);
     }
 
     render() {
+        // TODO: Move collision detection elsewhere
         this.registeredObjects.forEach(obj => {
-            if (this.grid[obj['y']][obj['x']] !== "■") {
+            if (this.grid[obj['y']][obj['x']] !== GFX.WALL) {
                 this.grid[obj['y']][obj['x']] = obj.graphic;
             } else {
                 obj.x = obj.prevX;
@@ -86,16 +96,35 @@ class Room {
         return this.grid.map(line => line.join('')).join('\n');
     }
 
-    addWalls(walltile = "■") {
+    addWalls() {
         this.grid = this.grid.map((line, i) => {
             if (i === 0 || i === this.grid.length - 1) {
-                return line.map(_ => walltile)
+                return line.map(_ => GFX.WALL)
             }
-            line[0] = walltile;
-            line[this.grid[0].length - 1] = walltile;
+            line[0] = GFX.WALL;
+            line[this.grid[0].length - 1] = GFX.WALL;
             return line;
         });
     }
 }
 
-module.exports = { Enemy, Player, Room };
+// A corridor. Should be used to connect rooms
+class Corridor { constructor() { } }
+
+// We might call the entire game arena the 'grid'.
+// This could be a 2D coordinate system.
+class LevelGrid {
+    constructor(xSize, ySize) {
+        this.xSize = xSize;
+        this.ySize = ySize;
+        this.grid = Array(this.ySize).fill('_').map(_ => Array(this.xSize).fill(GFX.VOID));
+    }
+    render() {
+        return this.grid.map(line => line.join('')).join('\n');
+    }
+}
+
+// A minimap?
+class Map { }
+
+module.exports = { Corridor, LevelGrid, Enemy, Player, Room };

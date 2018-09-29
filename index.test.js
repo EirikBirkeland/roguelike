@@ -1,5 +1,8 @@
-const { Enemy, Player, Room } = require('./index');
+const { LevelGrid, Enemy, Player, Room } = require('./index');
 const log = console.log;
+
+const LEVEL_X_SIZE = 80;
+const LEVEL_Y_SIZE = 40;
 
 describe('room', () => {
     const ROOM_X = 20;
@@ -44,8 +47,8 @@ describe('room', () => {
         const room = new Room(ROOM_X, ROOM_Y);
         const player = new Player(5, 5);
 
-        const gob1 = new Enemy(2, 2);
-        const gob2 = new Enemy(2, 2);
+        const gob1 = new Enemy(1, 1);
+        const gob2 = new Enemy(1, 1);
 
         room.registerObject(player);
         room.registerObject(gob1);
@@ -57,5 +60,12 @@ describe('room', () => {
         room.addWalls();
 
         log(room.render());
+    });
+});
+
+describe('LevelArea', () => {
+    it('should render the entire level area', () => {
+        const levelGrid = new LevelGrid(LEVEL_X_SIZE, LEVEL_Y_SIZE);
+        log(levelGrid.render());
     });
 });
