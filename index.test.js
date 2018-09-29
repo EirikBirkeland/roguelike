@@ -6,54 +6,56 @@ describe('room', () => {
     const ROOM_Y = 11;
 
     it('should render a room with player', () => {
-        const grid = new Room(ROOM_X, ROOM_Y);
+        const room = new Room(ROOM_X, ROOM_Y);
         const player = new Player(5, 5);
-        grid.registerObject(player);
-        log(grid.render());
+        room.registerObject(player);
+        log(room.render());
     });
 
     it('should move the player to the left', () => {
-        const grid = new Room(ROOM_X, ROOM_Y);
+        const room = new Room(ROOM_X, ROOM_Y);
         const player = new Player(5, 5);
-        grid.registerObject(player);
+        room.registerObject(player);
         player.move('left');
-        log(grid.render());
+        log(room.render());
     });
 
     it('should render a room with walls all around', () => {
-        const grid = new Room(ROOM_X, ROOM_Y);
+        const room = new Room(ROOM_X, ROOM_Y);
         const player = new Player(5, 5);
-        grid.registerObject(player);
-        grid.addWalls();
-        log(grid.render());
+        room.registerObject(player);
+        room.addWalls();
+        log(room.render());
     });
 
     it('should render an enemy as well', () => {
-        const grid = new Room(ROOM_X, ROOM_Y);
+        const room = new Room(ROOM_X, ROOM_Y);
         const player = new Player(5, 5);
         const goblin = new Enemy(3, 3);
 
-        grid.registerObject(player);
-        grid.registerObject(goblin);
-        grid.addWalls();
+        room.registerObject(player);
+        room.registerObject(goblin);
+        room.addWalls();
 
-        log(grid.render());
+        log(room.render());
     });
 
-    it('should handle two enemies in same spot', () => {
-        const grid = new Room(ROOM_X, ROOM_Y);
+    it('should handle two overlapping enemies in same spot without data loss', () => {
+        const room = new Room(ROOM_X, ROOM_Y);
         const player = new Player(5, 5);
 
         const gob1 = new Enemy(3, 3);
         const gob2 = new Enemy(3, 3);
 
-        grid.registerObject(player);
-        grid.registerObject(gob1);
-        grid.registerObject(gob2);
+        room.registerObject(player);
+        room.registerObject(gob1);
+        room.registerObject(gob2);
+
         gob1.moveRandom();
         gob2.moveRandom();
-        grid.addWalls();
 
-        log(grid.render());
+        room.addWalls();
+
+        log(room.render());
     });
 });
