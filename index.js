@@ -2,7 +2,6 @@
 // 2. Add some walls
 // 3. Support DOM and terminal
 
-
 class Entity {
     constructor(x, y, graphic) {
         this.x = x;
@@ -12,10 +11,16 @@ class Entity {
     }
 }
 
-class Player extends Entity {
+class Creature extends Entity {
+    constructor(x, y, graphic, health) {
+        super(x, y, graphic);
+        this.health = health;
+    }
+}
+
+class Player extends Creature {
     constructor(x, y) {
-        super(x, y, '@');
-        this.health = 100;
+        super(x, y, '@', 100);
     }
     move(dir) {
         switch (dir) {
@@ -31,15 +36,51 @@ class Player extends Entity {
     }
 }
 
-class Enemy extends Entity {
+class Enemy extends Creature {
     constructor(x, y) {
-        super(x, y, 'g');
-        this.speed = 1; // # of blocks to traverse
-        this.health = 100;
+        super(x, y, 'g', 100);
+    }
+    moveRandom() {
+        const numPossibleDirections = 9;
+        const rndNum = Math.floor(Math.random(9) * 10) + 1;
+
+        switch (rndNum) {
+            case 1:
+                this.x -= 1;
+                this.y -= 1;
+                break;
+            case 2:
+                this.y -= 1;
+                break;
+            case 3:
+                this.x += 1;
+                this.y += 1
+                break;
+            case 4:
+                this.x -= 1;
+                break;
+            case 5:
+                break
+            case 6:
+                this.x += 1;
+                break;
+            case 7:
+                this.x -= 1;
+                this.y += 1;
+                break;
+            case 8:
+                this.y += 1;
+                break;
+            case 9:
+                this.x += 1;
+                this.y += 1;
+                break;
+            default:
+        }
     }
 }
 
-class Grid {
+class Room {
     constructor(xSize, ySize) {
         this.xSize = xSize;
         this.ySize = ySize;
@@ -53,7 +94,6 @@ class Grid {
         this.registeredObjects.push(obj);
     }
     render() {
-        console.log(this)
         this.registeredObjects.forEach(obj => {
             this.grid[obj['y']][obj['x']] = obj.graphic;
         });
@@ -67,10 +107,10 @@ class Grid {
                 return line.map(_ => walltile)
             }
             line[0] = walltile;
-            line[this.grid.length - 1] = walltile;
+            line[this.grid[0].length - 1] = walltile;
             return line;
         })
     }
 }
 
-module.exports = { Enemy, Player, Grid };
+module.exports = { Enemy, Player, Room };
