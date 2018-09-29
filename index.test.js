@@ -64,8 +64,12 @@ describe('room', () => {
 });
 
 describe('LevelArea', () => {
-    it('should render the entire level area', () => {
+    it.only('should render the entire level area', () => {
         const levelGrid = new LevelGrid(LEVEL_X_SIZE, LEVEL_Y_SIZE);
+        levelGrid.addRoom(10, 10, 10, 15);
+        levelGrid.addRoom(25, 25, 10, 12);
+        levelGrid.addRoom(40, 10, 10, 10);
         log(levelGrid.render());
+        console.log(levelGrid.rooms)
     });
 });
