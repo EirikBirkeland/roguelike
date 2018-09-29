@@ -41,6 +41,9 @@ class Enemy extends Creature {
         super(x, y, 'g', 100);
     }
     moveRandom() {
+        this.prevX = this.x;
+        this.prevY = this.y;
+
         const numPossibleDirections = 9;
         const rndNum = Math.floor(Math.random(9) * 10) + 1;
 
@@ -65,29 +68,33 @@ class Room {
         this.grid = Array(this.ySize).fill('_').map(_ => Array(this.xSize).fill('.'));
         this.registeredObjects = [];
     }
-    update() {
-        this.grid[this.xSize / 2][this.ySize / 2] = '@';
-    }
+
     registerObject(obj) {
         this.registeredObjects.push(obj);
     }
+
     render() {
         this.registeredObjects.forEach(obj => {
-            this.grid[obj['y']][obj['x']] = obj.graphic;
+            if (this.grid[obj['y']][obj['x']] !== "■") {
+                this.grid[obj['y']][obj['x']] = obj.graphic;
+            } else {
+                obj.x = obj.prevX;
+                obj.y = obj.prevY;
+                this.grid[obj['y']][obj['x']] = obj.graphic;
+            }
         });
         return this.grid.map(line => line.join('')).join('\n');
     }
+
     addWalls(walltile = "■") {
         this.grid = this.grid.map((line, i) => {
-            if (i === 0) {
-                return line.map(_ => walltile)
-            } else if (i === this.grid.length - 1) {
+            if (i === 0 || i === this.grid.length - 1) {
                 return line.map(_ => walltile)
             }
             line[0] = walltile;
             line[this.grid[0].length - 1] = walltile;
             return line;
-        })
+        });
     }
 }
 

@@ -44,8 +44,8 @@ describe('room', () => {
         const room = new Room(ROOM_X, ROOM_Y);
         const player = new Player(5, 5);
 
-        const gob1 = new Enemy(3, 3);
-        const gob2 = new Enemy(3, 3);
+        const gob1 = new Enemy(2, 2);
+        const gob2 = new Enemy(2, 2);
 
         room.registerObject(player);
         room.registerObject(gob1);
