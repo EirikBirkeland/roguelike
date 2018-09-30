@@ -12,6 +12,8 @@ describe('LevelArea', () => {
         levelGrid.addRoom(25, 25, 10, 12);
         levelGrid.addRoom(40, 10, 10, 10);
 
+        levelGrid.addCorridor()
+
         const game = new Game();
         const player = new Player(15, 15);
         const gob1 = new Enemy(30, 30);
@@ -19,7 +21,7 @@ describe('LevelArea', () => {
         game.registerObject(player);
         game.registerObject(gob1);
 
-        // We want to grab the grid, while skipping the rest
+        // We want to grab the grid, without the additional methods
         game.grid = levelGrid.grid;
 
         let count = 0;
@@ -28,10 +30,11 @@ describe('LevelArea', () => {
             gob1.moveRandom();
             log(game.render());
             
-            if (++count >= 2) {
+            if (++count >= 5) {
                 clearInterval(thing);
                 done();
             }
-        }, 1000)
+        }, 500)
+
     });
 });

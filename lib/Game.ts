@@ -12,9 +12,9 @@ export default class Game {
     render() {
         // We avoid mutating this.grid
         const myGrid = JSON.parse(JSON.stringify(this.grid));
-        
+
         this.registeredObjects.forEach((obj) => {
-            if (myGrid[obj['y']][obj['x']] !== GFX.WALL) {
+            if (![GFX.WALL, GFX.VOID].includes(myGrid[obj['y']][obj['x']])) {
                 myGrid[obj['y']][obj['x']] = obj.graphic;
 
             } else {

@@ -1,5 +1,6 @@
 import Room from './Room';
 import GFX from './constants';
+import Game from './Game';
 
 
 export default class LevelGenerator {
@@ -16,7 +17,7 @@ export default class LevelGenerator {
     }
 
     // TODO: Add corridors
-    addRoom(ROOM_START_X = 10, ROOM_START_Y = 10, width, height) {
+    public addRoom(ROOM_START_X = 10, ROOM_START_Y = 10, width, height) {
 
         this.rooms.push({ xStart: ROOM_START_X, yStart: ROOM_START_Y, width, height });
 
@@ -43,6 +44,19 @@ export default class LevelGenerator {
             }
             return line;
         });
+    }
+
+    public addCorridorsBetweenRooms() {
+        // make interconnection between room1 and room2
+        this.rooms.forEach(room => {
+            const corridorStart = room.xStart
+        });
+        // make interconnection between room2 and room3
+
+        //
+    }
+
+    private addCorridor() {
     }
 
     render() {
