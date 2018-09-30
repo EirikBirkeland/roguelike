@@ -8,10 +8,8 @@ import LevelGenerator from './lib/LevelGenerator';
 import { Player, Enemy } from './lib/animate/beings';
 const log = console.log;
 
-
 const LEVEL_X_SIZE = 80;
 const LEVEL_Y_SIZE = 40;
-
 
 const levelGrid = new LevelGenerator(LEVEL_X_SIZE, LEVEL_Y_SIZE);
 levelGrid.addRoom(10, 10, 10, 15);
