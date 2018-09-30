@@ -16,7 +16,6 @@ class Entity {
         this.x = x;
         this.y = y;
         this.graphic = graphic;
-        this.speed = 1;
     }
 }
 
@@ -30,19 +29,29 @@ class Creature extends Entity {
 }
 
 export class Player extends Creature {
+    prevX: number;
+    prevY: number;
+    
     constructor(x, y) {
         super(x, y, GFX.PLAYER, 100);
     }
     move(dir) {
+        this.prevX = this.x;
+        this.prevY = this.y;
+
         switch (dir) {
             case "up":
-                this.y -= this.speed;
+                this.y -= 1;
+                break;
             case "down":
-                this.y += this.speed;
+                this.y += 1;
+                break;
             case "left":
-                this.x -= this.speed;
+                this.x -= 1;
+                break;
             case "right":
-                this.x += this.speed;
+                this.x += 1;
+                break;
         }
     }
 }
@@ -62,7 +71,6 @@ export class Enemy extends Creature {
         const rndNum = Math.floor(Math.random() * 10) + 1;
 
         if ([1, 4, 7].includes(rndNum)) {
-            9
             this.x -= 1;
         } else if ([3, 6, 9].includes(rndNum)) {
             this.x += 1;

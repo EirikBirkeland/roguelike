@@ -16,7 +16,6 @@ export default class Game {
         this.registeredObjects.forEach((obj) => {
             if (![GFX.WALL, GFX.VOID].includes(myGrid[obj['y']][obj['x']])) {
                 myGrid[obj['y']][obj['x']] = obj.graphic;
-
             } else {
                 obj.x = obj.prevX;
                 obj.y = obj.prevY;

@@ -1,9 +1,9 @@
 import 'colors';
 
 const GFX = {
-    VOID: ' ' || '`'.gray,
+    VOID: '`'.gray,
     FLOOR: '.',
-    WALL: ' ' || '■'.green,
+    WALL: '■'.green,
     PLAYER: '@'.red,
     ENEMY: 'g',
 }

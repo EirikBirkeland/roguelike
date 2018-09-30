@@ -19,7 +19,12 @@ export default class LevelGenerator {
     // TODO: Add corridors
     public addRoom(ROOM_START_X = 10, ROOM_START_Y = 10, width, height) {
 
-        this.rooms.push({ xStart: ROOM_START_X, yStart: ROOM_START_Y, width, height });
+        this.rooms.push({
+            xStart: ROOM_START_X,
+            yStart: ROOM_START_Y,
+            width,
+            height
+        });
 
         const room = (() => {
             const room = new Room(width, height, GFX.FLOOR);
@@ -48,12 +53,7 @@ export default class LevelGenerator {
 
     public addCorridorsBetweenRooms() {
         // make interconnection between room1 and room2
-        this.rooms.forEach(room => {
-            const corridorStart = room.xStart
-        });
         // make interconnection between room2 and room3
-
-        //
     }
 
     private addCorridor() {
