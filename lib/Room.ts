@@ -1,4 +1,4 @@
-export function addPerimeter(grid: string[][], tile) {
+function addPerimeter(grid: string[][], tile) {
     return grid.map((line, i) => {
         if (i === 0 || i === grid.length - 1) {
             return line.map(_ => tile)
@@ -9,7 +9,7 @@ export function addPerimeter(grid: string[][], tile) {
     });
 }
 
-export class Room {
+export default class Room {
     height: number;
     width: number;
     grid: string[][];
