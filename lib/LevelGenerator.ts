@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import Room from './Room';
 import GFX from './constants';
 import Game from './Game';
@@ -12,11 +14,13 @@ export default class LevelGenerator {
     ySize: number;
     grid: string[][];
     rooms: object[];
+    diggerCoordinate: number[];
 
     constructor(xSize, ySize) {
         this.xSize = xSize;
         this.ySize = ySize;
         this.grid = Array(this.ySize).fill('_').map(_ => Array(this.xSize).fill(GFX.VOID));
+        this.diggerCoordinate = null;
     }
 
     public create() {
@@ -40,14 +44,39 @@ export default class LevelGenerator {
             return [rndX, rndY];
         })();
         log('The starting coordinate is ' + startingXy);
+        this.diggerCoordinate = startingXy;
 
         // TODO: pick a random wall tile from startingXy
-        const findAWallTileNearby = () => {};
+        const findAWallTileNearby = () => {
+            // move in a random direction until hitting first wall tile
+            const newDirection = _.sample(["up", "down", "left", "right"]);
+
+            while (this.grid[this.diggerCoordinate[0]][this.diggerCoordinate[1]] !== GFX.WALL) {
+                switch (newDirection) {
+                    case "up":
+                        this.diggerCoordinate = this.diggerCoordinate[this.diggerCoordinate[0]][this.diggerCoordinate[1] + 1]
+                        break;
+                    case "down":
+                        this.diggerCoordinate = this.diggerCoordinate[this.diggerCoordinate[0]][this.diggerCoordinate[1] - 1]
+                        break;
+                    case "left":
+                        this.diggerCoordinate = this.diggerCoordinate[this.diggerCoordinate[0] - 1][this.diggerCoordinate[1]]
+                        break;
+                    case "right":
+                        this.diggerCoordinate = this.diggerCoordinate[this.diggerCoordinate[0] + 1][this.diggerCoordinate[1]]
+                        break;
+                }
+
+            }
+            this.diggerCoordinate = [];
+        };
+        findAWallTileNearby();
+
 
         // TODO: Plan to build a corridor of some length (e.g. length 10 tiles?)
         //       If NOT possible, repeat previous step looking for a suitable wall tile.
-        const attemptToDigATunnel = () => {};
-        const attemptToDigARoom = () => {};
+        const attemptToDigATunnel = () => { };
+        const attemptToDigARoom = () => { };
     }
 
     // TODO: Add corridors
