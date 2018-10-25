@@ -12,16 +12,12 @@ const LEVEL_X_SIZE = 80;
 const LEVEL_Y_SIZE = 40;
 
 const levelGrid = new LevelGenerator(LEVEL_X_SIZE, LEVEL_Y_SIZE);
-levelGrid.addRoom(10, 10, 10, 15);
-levelGrid.addRoom(25, 25, 10, 12);
-levelGrid.addRoom(40, 10, 10, 10);
+levelGrid.create();
 
 const game = new Game();
 const player = new Player(15, 15);
-const gob1 = new Enemy(30, 30);
 
 game.registerObject(player);
-game.registerObject(gob1);
 
 game.grid = levelGrid.grid;
 
@@ -34,12 +30,11 @@ process.stdin.on('data', function (chunk) {
         a: 'left',
         d: 'right',
         s: 'down',
-    }
+    };
 
     player.move(keys[chunk.trim()])
-    gob1.moveRandom();
     log(game.render());
-    log(player)
+    log(player);
 });
 
 module.exports = { LevelGenerator, Game, Enemy, Player, Room };

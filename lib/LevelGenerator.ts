@@ -1,7 +1,11 @@
 import Room from './Room';
 import GFX from './constants';
 import Game from './Game';
+const log = console.log;
 
+function getRandom(end) {
+    return Math.floor(Math.random() * end)
+}
 
 export default class LevelGenerator {
     xSize: number;
@@ -13,13 +17,44 @@ export default class LevelGenerator {
         this.xSize = xSize;
         this.ySize = ySize;
         this.grid = Array(this.ySize).fill('_').map(_ => Array(this.xSize).fill(GFX.VOID));
-        this.rooms = [];
+    }
+
+    public create() {
+        this.addRoom(10, 10, 10, 15);
+        this.digTunnel();
+    }
+
+    private digTunnel() {
+        // First, randomly locate a floor tile
+        const startingXy: number[] = (() => {
+            let candidate: string;
+            let rndX: number;
+            let rndY: number;
+
+            while (candidate !== GFX.FLOOR) {
+                rndX = getRandom(this.grid.length - 1);
+                rndY = getRandom(this.grid[0].length - 1);
+                candidate = this.grid[rndX][rndY];
+            }
+            this.grid[rndX][rndY] = "X";
+            return [rndX, rndY];
+        })();
+        log('The starting coordinate is ' + startingXy);
+
+        // TODO: pick a random wall tile from startingXy
+        const findAWallTileNearby = () => {};
+
+        // TODO: Plan to build a corridor of some length (e.g. length 10 tiles?)
+        //       If NOT possible, repeat previous step looking for a suitable wall tile.
+        const attemptToDigATunnel = () => {};
+        const attemptToDigARoom = () => {};
     }
 
     // TODO: Add corridors
-    public addRoom(ROOM_START_X = 10, ROOM_START_Y = 10, width, height) {
+    private addRoom(ROOM_START_X, ROOM_START_Y, width, height) {
+        const rooms = [];
 
-        this.rooms.push({
+        rooms.push({
             xStart: ROOM_START_X,
             yStart: ROOM_START_Y,
             width,
@@ -49,14 +84,6 @@ export default class LevelGenerator {
             }
             return line;
         });
-    }
-
-    public addCorridorsBetweenRooms() {
-        // make interconnection between room1 and room2
-        // make interconnection between room2 and room3
-    }
-
-    private addCorridor() {
     }
 
     render() {

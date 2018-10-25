@@ -1,10 +1,8 @@
-import 'colors';
-
 const GFX = {
-    VOID: '`'.gray,
+    VOID: '`',
     FLOOR: '.',
-    WALL: '■'.green,
-    PLAYER: '@'.red,
+    WALL: '■',
+    PLAYER: '@',
     ENEMY: 'g',
 }
 

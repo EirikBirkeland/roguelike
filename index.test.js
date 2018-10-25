@@ -12,8 +12,6 @@ describe('LevelArea', () => {
         levelGrid.addRoom(25, 25, 10, 12);
         levelGrid.addRoom(40, 10, 10, 10);
 
-        levelGrid.addCorridor()
-
         const game = new Game();
         const player = new Player(15, 15);
         const gob1 = new Enemy(30, 30);
