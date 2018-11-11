@@ -15,6 +15,7 @@ export default class LevelGenerator {
     grid: string[][];
     rooms: object[];
     diggerCoordinate: number[];
+    candidateWall: string;
 
     constructor(xSize, ySize) {
         this.xSize = xSize;
@@ -28,8 +29,7 @@ export default class LevelGenerator {
         this.digTunnel();
     }
 
-    private digTunnel() {
-        // First, randomly locate a floor tile
+    private getRandomFloorTile() { // Note: depends on at least one floor tile already existing!
         const startingXy: number[] = (() => {
             let candidate: string;
             let rndX: number;
@@ -40,43 +40,99 @@ export default class LevelGenerator {
                 rndY = getRandom(this.grid[0].length - 1);
                 candidate = this.grid[rndX][rndY];
             }
-            this.grid[rndX][rndY] = "X";
             return [rndX, rndY];
         })();
+        return startingXy;
         log('The starting coordinate is ' + startingXy);
-        this.diggerCoordinate = startingXy;
+    }
 
-        // TODO: pick a random wall tile from startingXy
-        const findAWallTileNearby = () => {
-            // move in a random direction until hitting first wall tile
-            const newDirection = _.sample(["up", "down", "left", "right"]);
+    private getNearbyWalltile() {
+        if (!this.diggerCoordinate) {
+            throw new Error("diggerCoordinate must be pre-set!")
+        }
 
-            while (this.grid[this.diggerCoordinate[0]][this.diggerCoordinate[1]] !== GFX.WALL) {
-                switch (newDirection) {
-                    case "up":
-                        this.diggerCoordinate = this.diggerCoordinate[this.diggerCoordinate[0]][this.diggerCoordinate[1] + 1]
-                        break;
-                    case "down":
-                        this.diggerCoordinate = this.diggerCoordinate[this.diggerCoordinate[0]][this.diggerCoordinate[1] - 1]
-                        break;
-                    case "left":
-                        this.diggerCoordinate = this.diggerCoordinate[this.diggerCoordinate[0] - 1][this.diggerCoordinate[1]]
-                        break;
-                    case "right":
-                        this.diggerCoordinate = this.diggerCoordinate[this.diggerCoordinate[0] + 1][this.diggerCoordinate[1]]
-                        break;
-                }
+        // move in a random direction until hitting first wall tile
+        const newDirection = _.sample(["up", "down", "left", "right"]);
+        this.candidateWall = newDirection;
 
+        while (this.grid[this.diggerCoordinate[0]][this.diggerCoordinate[1]] !== GFX.WALL) {
+            switch (newDirection) {
+                case "up":
+                    this.diggerCoordinate = [this.diggerCoordinate[0], this.diggerCoordinate[1] + 1]
+                    break;
+                case "down":
+                    this.diggerCoordinate = [this.diggerCoordinate[0], this.diggerCoordinate[1] - 1]
+                    break;
+                case "left":
+                    this.diggerCoordinate = [this.diggerCoordinate[0] - 1, this.diggerCoordinate[1]]
+                    break;
+                case "right":
+                    this.diggerCoordinate = [this.diggerCoordinate[0] + 1, this.diggerCoordinate[1]]
+                    break;
             }
-            this.diggerCoordinate = [];
-        };
-        findAWallTileNearby();
+        }
+    }
 
+    private dig(direction, gfx, length, offset) {
+
+        let newX = this.diggerCoordinate[0];
+        let newY = this.diggerCoordinate[1];
+
+        switch (direction) {
+            case "up":
+                newX += offset;
+                break;
+            case "down":
+                newX += offset;
+                break;
+            case "left":
+                newY += offset;
+                break;
+            case "right":
+                newY += offset;
+                break;
+        }
+
+        for (let i = 0; i < length; i++) {
+            switch (direction) {
+                case "up":
+                    newY += 1;
+                    this.grid[newX][newY] = gfx;
+                    break;
+                case "down":
+                    newY -= 1;
+                    this.grid[newX][newY] = gfx;
+                    break;
+                case "left":
+                    newX -= 1;
+                    this.grid[newX][newY] = gfx;
+                    break;
+                case "right":
+                    newX += 1;
+                    this.grid[newX][newY] = gfx;
+                    break;
+            }
+        }
+    }
+    private attemptToDigTunnel() {
+        const corridorLength = 15;
+        this.dig(this.candidateWall, GFX.WALL, corridorLength, -1)
+        this.dig(this.candidateWall, GFX.FLOOR, corridorLength, 0)
+        this.dig(this.candidateWall, GFX.WALL, corridorLength, +1)
+    }
+
+    private attemptToDigARoom() {
+
+    }
+
+    private digTunnel() {
+        this.diggerCoordinate = this.getRandomFloorTile();
+        this.getNearbyWalltile();
+        this.grid[this.diggerCoordinate[0]][this.diggerCoordinate[1]] = "X";
+        this.attemptToDigTunnel();
 
         // TODO: Plan to build a corridor of some length (e.g. length 10 tiles?)
         //       If NOT possible, repeat previous step looking for a suitable wall tile.
-        const attemptToDigATunnel = () => { };
-        const attemptToDigARoom = () => { };
     }
 
     // TODO: Add corridors
