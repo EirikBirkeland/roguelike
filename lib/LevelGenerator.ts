@@ -5,6 +5,8 @@ import GFX from './constants';
 import Game from './Game';
 const log = console.log;
 
+const debug = false;
+
 function getRandom(end) {
     return Math.floor(Math.random() * end)
 }
@@ -73,8 +75,28 @@ export default class LevelGenerator {
         }
     }
 
-    private updateCoords(direction, coords, offset): number[] {
-        log(offset);
+    private attemptToDigTunnel() {
+        const corridorLength = 5;
+        this.dig(this.candidateWall, GFX.FLOOR, corridorLength, 0, true)
+        this.dig(this.candidateWall, GFX.WALL, corridorLength, -1)
+        this.dig(this.candidateWall, GFX.WALL, corridorLength, 1)
+    }
+
+    private dig(direction, gfx, length, offset, setXAtEnd?) {
+        let coords = this.prepareCoords(direction, Object.assign([], this.diggerCoordinate), offset);
+
+        for (let i = 0; i < length; i++) {
+            coords = this.digOne(direction, coords)
+            this.grid[coords[0]][coords[1]] = gfx;
+        };
+
+        if (setXAtEnd)
+            this.grid[coords[0]][coords[1]] = "X";
+    }
+
+
+    // needs to be renamed
+    private prepareCoords(direction, coords, offset): number[] {
         switch (direction) {
             case "left":
                 coords[1] += offset;
@@ -92,38 +114,23 @@ export default class LevelGenerator {
         return coords;
     }
 
-    private dig(direction, gfx, length, offset) {
-        let [newX, newY] = this.updateCoords(direction, Object.assign([], this.diggerCoordinate), offset);
-
-        log(newX, newY)
-        for (let i = 0; i < length; i++) {
-            log(newX, newY)
-            switch (direction) {
-                case "left":
-                    newX -= 1;
-                    this.grid[newX][newY] = gfx;
-                    break;
-                case "right":
-                    newX += 1;
-                    this.grid[newX][newY] = gfx;
-                    break;
-                case "up":
-                    newY += 1;
-                    this.grid[newX][newY] = gfx;
-                    break;
-                case "down":
-                    newY -= 1;
-                    this.grid[newX][newY] = gfx;
-                    break;
-            }
+    // needs to be renamed
+    private digOne(direction, coords): number[] {
+        switch (direction) {
+            case "left":
+                coords[0] -= 1;
+                break;
+            case "right":
+                coords[0] += 1;
+                break;
+            case "up":
+                coords[1] += 1;
+                break;
+            case "down":
+                coords[1] -= 1;
+                break;
         }
-    }
-
-    private attemptToDigTunnel() {
-        const corridorLength = 5;
-        this.dig(this.candidateWall, GFX.FLOOR, corridorLength, 0)
-        this.dig(this.candidateWall, GFX.WALL, corridorLength, -1)
-        this.dig(this.candidateWall, GFX.WALL, corridorLength, 1)
+        return coords;
     }
 
     private attemptToDigARoom() {
