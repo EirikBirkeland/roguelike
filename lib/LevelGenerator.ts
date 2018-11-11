@@ -73,36 +73,32 @@ export default class LevelGenerator {
         }
     }
 
-    private dig(direction, gfx, length, offset) {
-
-        let newX = this.diggerCoordinate[0];
-        let newY = this.diggerCoordinate[1];
-
+    private updateCoords(direction, coords, offset): number[] {
+        log(offset);
         switch (direction) {
-            case "up":
-                newX += offset;
-                break;
-            case "down":
-                newX += offset;
-                break;
             case "left":
-                newY += offset;
+                coords[1] += offset;
                 break;
             case "right":
-                newY += offset;
+                coords[1] += offset;
+                break;
+            case "up":
+                coords[0] += offset;
+                break;
+            case "down":
+                coords[0] += offset;
                 break;
         }
+        return coords;
+    }
 
+    private dig(direction, gfx, length, offset) {
+        let [newX, newY] = this.updateCoords(direction, Object.assign([], this.diggerCoordinate), offset);
+
+        log(newX, newY)
         for (let i = 0; i < length; i++) {
+            log(newX, newY)
             switch (direction) {
-                case "up":
-                    newY += 1;
-                    this.grid[newX][newY] = gfx;
-                    break;
-                case "down":
-                    newY -= 1;
-                    this.grid[newX][newY] = gfx;
-                    break;
                 case "left":
                     newX -= 1;
                     this.grid[newX][newY] = gfx;
@@ -111,14 +107,23 @@ export default class LevelGenerator {
                     newX += 1;
                     this.grid[newX][newY] = gfx;
                     break;
+                case "up":
+                    newY += 1;
+                    this.grid[newX][newY] = gfx;
+                    break;
+                case "down":
+                    newY -= 1;
+                    this.grid[newX][newY] = gfx;
+                    break;
             }
         }
     }
+
     private attemptToDigTunnel() {
-        const corridorLength = 15;
-        this.dig(this.candidateWall, GFX.WALL, corridorLength, -1)
+        const corridorLength = 5;
         this.dig(this.candidateWall, GFX.FLOOR, corridorLength, 0)
-        this.dig(this.candidateWall, GFX.WALL, corridorLength, +1)
+        this.dig(this.candidateWall, GFX.WALL, corridorLength, -1)
+        this.dig(this.candidateWall, GFX.WALL, corridorLength, 1)
     }
 
     private attemptToDigARoom() {
