@@ -21,21 +21,24 @@ game.registerObject(player);
 
 game.grid = levelGrid.grid;
 
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
-
 // Render initial level
 log(game.render());
 
-process.stdin.on('data', function (chunk) {
+process.stdin.setRawMode( true );
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', function (key) {
     const keys = {
         w: 'up',
         a: 'left',
         d: 'right',
         s: 'down',
     };
-
-    player.move(keys[chunk.trim()])
+    if ( key === '\u0003' ) {
+        process.exit();
+    }
+    
+    player.move(keys[key]);
     log(game.render());
     log(player);
 });
