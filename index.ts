@@ -24,6 +24,9 @@ game.grid = levelGrid.grid;
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
+// Render initial level
+log(game.render());
+
 process.stdin.on('data', function (chunk) {
     const keys = {
         w: 'up',
