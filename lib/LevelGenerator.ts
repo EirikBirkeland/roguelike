@@ -11,6 +11,11 @@ function getRandom(end) {
     return Math.floor(Math.random() * end)
 }
 
+// The level generator requires that I think carefully about how I want it to generate a level.
+// E.g. it could be totally random (rather uninteresting results, unless I put a loooot of effort into the generation),
+// or I could design each level to make it unique (and as such, I might as well draw the level in Paint or something and indicate treasures, etc.)
+// I could perhaps still randomize some elements, like enemy and item placement.
+
 export default class LevelGenerator {
     xSize: number;
     ySize: number;
@@ -82,7 +87,7 @@ export default class LevelGenerator {
         this.dig(this.candidateWall, GFX.WALL, corridorLength, 1)
     }
 
-    private dig(direction, gfx, length, offset, setXAtEnd?) {
+    private dig(direction, gfx, length, offset) {
         let coords = this.prepareCoords(direction, Object.assign([], this.diggerCoordinate), offset);
 
         for (let i = 0; i < length; i++) {
@@ -90,7 +95,7 @@ export default class LevelGenerator {
             this.grid[coords[0]][coords[1]] = gfx;
         };
 
-        if (setXAtEnd)
+        if (debug)
             this.grid[coords[0]][coords[1]] = "X";
     }
 
@@ -114,7 +119,6 @@ export default class LevelGenerator {
         return coords;
     }
 
-    // needs to be renamed
     private digOne(direction, coords): number[] {
         switch (direction) {
             case "left":
@@ -140,14 +144,10 @@ export default class LevelGenerator {
     private digTunnel() {
         this.diggerCoordinate = this.getRandomFloorTile();
         this.getNearbyWalltile();
-        this.grid[this.diggerCoordinate[0]][this.diggerCoordinate[1]] = "X";
+        this.grid[this.diggerCoordinate[0]][this.diggerCoordinate[1]] = ".";
         this.attemptToDigTunnel();
-
-        // TODO: Plan to build a corridor of some length (e.g. length 10 tiles?)
-        //       If NOT possible, repeat previous step looking for a suitable wall tile.
     }
 
-    // TODO: Add corridors
     private addRoom(ROOM_START_X, ROOM_START_Y, width, height) {
         const rooms = [];
 
