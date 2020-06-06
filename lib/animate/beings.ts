@@ -11,6 +11,7 @@ class Entity {
     y: number;
     graphic: string;
     speed: number;
+    strength: number;
     constructor(x, y, graphic) {
         abstract(Entity, new.target);
         this.x = x;
@@ -21,10 +22,11 @@ class Entity {
 
 class Creature extends Entity {
     health: number;
-    constructor(x, y, graphic, health) {
+    constructor(x, y, graphic, health, strength) {
         abstract(Entity, new.target);
         super(x, y, graphic);
         this.health = health;
+        this.strength = strength;
     }
 }
 
@@ -33,7 +35,7 @@ export class Player extends Creature {
     prevY: number;
     
     constructor(x, y) {
-        super(x, y, GFX.PLAYER, 100);
+        super(x, y, GFX.PLAYER, 100, 10);
     }
     move(dir) {
         this.prevX = this.x;
@@ -61,7 +63,7 @@ export class Enemy extends Creature {
     prevY: number;
 
     constructor(x, y) {
-        super(x, y, GFX.ENEMY, 100);
+        super(x, y, GFX.ENEMY, 50);
     }
     moveRandom() {
         this.prevX = this.x;

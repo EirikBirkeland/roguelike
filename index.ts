@@ -42,6 +42,7 @@ process.stdin.on('data', function (key) {
     }
     
     player.move(keys[key]);
+
     log(game.update());
     log(player);
 });

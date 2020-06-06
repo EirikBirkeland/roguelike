@@ -24,7 +24,10 @@ export default class Game {
 
                 if(obj instanceof Player && myGrid[obj['y']][obj['x']] === GFX.ENEMY) {
                     // fight the enemy!
-                    console.log("You attack the nasty enemy");
+                    console.log("You attack the nasty enemy with your fists");
+                    obj.x = obj.prevX;
+                    obj.y = obj.prevY;
+                    myGrid[obj['y']][obj['x']] = obj.graphic;
                 } else {
                     myGrid[obj['y']][obj['x']] = obj.graphic;
                 }
